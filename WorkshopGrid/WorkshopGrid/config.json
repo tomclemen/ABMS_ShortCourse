@@ -1,0 +1,31 @@
+{
+  "globals": {
+    "startTime": "2022-03-01T05:00",
+    "endTime": "2022-03-01T05:30",
+    "deltaTUnit": "seconds",
+    "deltaT": 1,
+    "output": "csv",
+    "pythonVisualization": true
+  },
+  "layers": [
+    {
+      "name": "GridLayer",
+      "file": "Resources/grid_closed.csv",
+      "pythonVisualization": true
+    }
+  ],
+  "agents": [
+    {
+      "name": "DiagonalRunner",
+      "count": 2
+    },
+    {
+      "name": "StraightRunner",
+      "count": 2
+    },
+    {
+      "name": "HelperAgent",
+      "count": 1
+    }
+  ]
+}

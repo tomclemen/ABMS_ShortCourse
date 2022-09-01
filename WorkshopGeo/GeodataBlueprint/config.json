@@ -1,0 +1,39 @@
+{
+  "id": "GeodataBlueprint",
+  "globals": {
+    "deltaT": 1,
+    "startPoint": "2022-09-12T00:00:00",
+    "endPoint": "2022-09-12T23:59:59",
+    "deltaTUnit": "seconds",
+    "console": false,
+    "output": "csv",
+    "options": {
+      "delimiter": ";",
+      "format": "en-EN"
+    }
+  },
+  "layers": [
+    {
+      "name": "GraphLayer", 
+      "file": "Resources/edges.geojson"
+    },
+    {
+      "name": "PoiLayer",
+      "file": "Resources/pois.geojson"
+    }
+  ],
+  "agents": [
+    {
+      "name": "Human",
+      "count": 10,
+      "outputs": [
+        {
+          "kind": "csv"
+        },
+        {
+          "kind": "trips"
+        }
+      ]
+    }
+  ]
+}
