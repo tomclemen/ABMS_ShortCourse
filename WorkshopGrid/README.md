@@ -18,7 +18,7 @@ The model consists of the following agent types and layer types:
 - Agent types:
   - `StraightRunner`: an agent that moves randomly along **straight** lines.
   - `DiagonalRunner`: an agent that moves randomly along **diagonal** lines.
-  - `HelperAgent`: an agent that is implemented purely for technical reasons. Data from the `GridLayer` is sent to the web socket of the visualization tool only when that data is changed. The `HelperAgent` performs a change to the `GridLayer` data to enable the visualization of the grid. Agents of this type are not displayed in the visualization component.
+  - `HelperAgent`: an agent that is implemented only for technical reasons. Data from the `GridLayer` is sent to the web socket of the visualization tool only when that data is changed. The `HelperAgent` performs a change to the `GridLayer` data to enable the visualization of the grid. Agents of this type are not displayed in the visualization component.
 - Layer types:
   - `GridLayer`: the layer on which the agents live and move.
 - Other classes:
@@ -32,9 +32,11 @@ The model can be configured via a JavaScript Object Notation (JSON) file called 
 - `deltaT`: the length of a single time step. The simulation time is given by the number of `deltaT` time steps that fit into the range defined by `startTime` and `endTime`
 - `pythonVisualization`: a boolean flag that, if set to `true`, prompts the simulation framework to send tick-based data to an external web socket, where it is further processed by a visualization tool. See below for how to set up the visualization tool and get a visualized simulation output.
 - `layers`: the layer types that should be included in the simulation
+  - In the directory `Resources`, some exemplary layer input files are provided. To use them, please update the `file` key of the `GridLayer` object in the JSON file.
 - `agents`: the agent types that should be included in the simulation
+  - The number of agents can be changed here by updating the value of the `count` key of each agent type.
 
-For more detailed information on configuration parameters, please click [here](https://mars.haw-hamburg.de/articles/core/model-configuration/index.html).
+For more detailed information on configuration parameters, please view the MARS documentation [here](https://mars.haw-hamburg.de/articles/core/model-configuration/index.html).
 
 ## Model setup and execution
 
@@ -46,8 +48,8 @@ The following tools are required on your machine to run a full simulation and vi
 
 To set up and run the simulation and visualization, please follow these steps:
 
-1. Download or clone this repository (`mars-learning`)
-2. Open this directory: `Examples/2022 Short Course South Africa/WorkshopGrid/Visualization`
+1. Download or clone this repository
+2. Navigate into the folder of this `README.md` in your terminal
 3. Follow these instructions to start the visualization tool (alternatively, see the README in the `Visualization` directory):
     1. Open a terminal in the `Visualization` directory
     2. Execute the following command:
@@ -59,7 +61,7 @@ To set up and run the simulation and visualization, please follow these steps:
     4. A black PyGame window should open. **Note:** Do not close the terminal.
     5. Alternatively to the above, the visualization tool can be started with a Python IDE such as [JetBrains PyCharm](https://www.jetbrains.com/pycharm/).
 4. Open JetBrains Rider.
-5. Open the solution file `Examples/2022 Short Course South Africa/WorkshopGrid/WorkshopGrid.sln`.
+5. Open the solution file `WorkshopGrid/WorkshopGrid.sln`.
 6. Run the `Main()` method in the file `Program.cs`.
 7. The simulation should run in Rider and, simultaneously, a visualization should be displayed in the PyGame window.
 

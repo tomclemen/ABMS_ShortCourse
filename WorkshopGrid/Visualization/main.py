@@ -25,14 +25,17 @@ YELLOW_LIGHT = [205, 217, 104, 10]
 PURPLE_LIGHT = [162, 134, 222, 10]
 BLUE_LIGHT = [174, 218, 233, 10]
 
-RASTER_COLORS = [GREEN_LIGHT, YELLOW_LIGHT, PURPLE_LIGHT, BLUE_LIGHT]
+RASTER_COLORS = {
+    1: GREEN_LIGHT,
+    2: YELLOW_LIGHT,
+    3: PURPLE_LIGHT,
+    4: BLUE_LIGHT,
+}
+UNKNOWN_RASTER = WHITE
+AGENT_COLORS = [GREEN_LIGHT, YELLOW_LIGHT, PURPLE_LIGHT, BLUE_LIGHT]
 VECTOR_COLORS = [RED, WHITE, BLUE, ORANGE, YELLOW]
-# COLORS = [NAVYBLUE, RED, WHITE, BLUE, ORANGE, PURPLE, CYAN]  # without WHITE for background
-
-COLORS = RASTER_COLORS
 
 # WINDOW_SIZE = 800, 800
-
 
 class Visualization:
     def __init__(self):
@@ -53,8 +56,8 @@ class Visualization:
         self.textRect = self.text.get_rect()
         self.fpsTextRect = self.fps_text.get_rect()
         self.desired_fpsRect = self.desired_fps.get_rect()
+        
         self.textLoading = self.font.render('Waiting for MARS simulation to start...', True, WHITE)
-        self.textLoadingRect = self.textLoading.get_rect()
 
         self.l = lock.RWLock()
         self.pressed_up = False
@@ -74,6 +77,8 @@ class Visualization:
         self.time_to_wait_milliseconds = 10
         self.borderColor = (255, 255, 255)
         self.barColor = (0, 128, 0)
+        self.has_welcome_been_printed = False
+
         self.set_window_relations(self.WINDOW_SIZE[0], self.WINDOW_SIZE[1])
 
     def set_window_relations(self, width, height):
@@ -85,6 +90,13 @@ class Visualization:
         self.barPos = (10, height - 40)
         self.barSize = (self.WINDOW_SIZE[0] - 20, 20)
         self.screen = pygame.display.set_mode((self.WINDOW_SIZE[0], height), HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+        if not self.has_welcome_been_printed:
+            self.screen.fill(GRAY)
+            textLoadingRect = self.textLoading.get_rect(center=(self.WINDOW_SIZE[0]/2, self.WINDOW_SIZE[1]/2))
+            self.screen.blit(self.textLoading, textLoadingRect)
+            pygame.display.update()
+            self.has_welcome_been_printed = True
 
         self.gamePos = (10, 10)
         self.gameSize = (self.WINDOW_SIZE[0] - 20, self.WINDOW_SIZE[1] - 60)
@@ -158,10 +170,9 @@ class Visualization:
             self.ws = None
 
     def visualize_content(self):
-
         self.clock.tick(self.desired_fps)
         self.load_data()
-
+       
         if not self.tick_display[0]:
             return
 
@@ -200,11 +211,12 @@ class Visualization:
             for cell in cells_with_value:
                 x = ((cell[0] - self.WORLD_SIZE[0]) * scale_x)
                 y = ((cell[1] - self.WORLD_SIZE[1]) * scale_y)
-
-                value = cell[2] % 255
-                color = RASTER_COLORS[raster_key % len(RASTER_COLORS)]
-                color[3] = value
-
+                 
+                value = cell[2]
+                color = UNKNOWN_RASTER
+                if value in RASTER_COLORS:
+                    color = RASTER_COLORS[value]
+                
                 pygame.draw.rect(surface, color, pygame.Rect(x, y, width, height))
 
         for geometry in self.point_features:
@@ -238,10 +250,10 @@ class Visualization:
                 x = entity["x"]
                 y = entity["y"]
 
-                pygame.draw.circle(surface, COLORS[type_key % len(COLORS)],
+                pygame.draw.circle(surface, AGENT_COLORS[type_key % len(AGENT_COLORS)],
                                    (((x - self.WORLD_SIZE[0]) * scale_x + scale_x / 2),
                                     ((y - self.WORLD_SIZE[1]) * scale_y) + scale_y / 2),
-                                   line_width * agent_size, 0)  # NIMA: added scaling factor for visualization
+                                   line_width * agent_size, 0)
 
         # Map game area to main view
         flipped = pygame.transform.flip(surface, False, True)
@@ -300,6 +312,8 @@ class Visualization:
             self.desired_fps = (self.desired_fps + 3)
             if self.desired_fps >= 1000:
                 self.desired_fps = 1000
+        elif keys[pygame.K_q]:
+            self.run = not self.run
 
     def content_loop(self):
         while self.run:
