@@ -1,0 +1,35 @@
+{
+  "globals": {
+    "deltaT": 1,
+    "startPoint": "2022-09-12T00:00:00",
+    "endPoint": "2022-09-12T11:59:59",
+    "deltaTUnit": "seconds",
+    "console": false,
+    "output": "csv",
+    "options": {
+      "delimiter": ";",
+      "format": "en-EN"
+    }
+  },
+  "layers": [
+    {
+      "name": "Perimeter",
+      "file": "Resources/addo.asc"
+    },
+    {
+      "name":"WaterLayer",
+      "file":"Resources/WaterSpots.geojson"
+    }
+  ],
+  "entities": [],
+  "agents": [
+    {
+      "name": "Elephant",
+      "count": 10,
+      "file":"Resources/elephants.csv",
+      "outputs": [
+        {"kind": "trips"}
+      ]
+    }
+  ]
+}
